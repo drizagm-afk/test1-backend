@@ -21,7 +21,7 @@ public class EstudianteController {
     public ResponseEntity<PageResponseDTO<EstudianteResponseDTO>> listPage(
             @RequestParam(defaultValue = "0") int pagina,
             @RequestParam(defaultValue = "10") int tamanio,
-            @RequestParam(defaultValue = "nombre") String ordenarPor,
+            @RequestParam(defaultValue = "nombres") String ordenarPor,
             @RequestParam(defaultValue = "asc") String direccion
     ) {
         return ResponseEntity.ok(service.findPage(new PageRequestDTO(

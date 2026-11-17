@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@Validated
 @RequiredArgsConstructor
 public class CursoServiceImpl implements CursoService {
     private final CursoRepository repository;
@@ -34,7 +33,7 @@ public class CursoServiceImpl implements CursoService {
 
     @Override
     @Transactional(readOnly = true)
-    public PageResponseDTO<CursoResponseDTO> findPage(@Valid PageRequestDTO pageRequest) {
+    public PageResponseDTO<CursoResponseDTO> findPage(PageRequestDTO pageRequest) {
         var pageable = pageRequest.toPageable(fields);
 
         return PageResponseDTO.fromPage(repository.findAll(pageable).map(CursoMapper::toResponse));
@@ -74,7 +73,7 @@ public class CursoServiceImpl implements CursoService {
     @Transactional
     public CursoResponseDTO update(Long id, CursoRequestDTO request) {
         var curso = repository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Curso no encontrada: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Curso no encontrado: " + id));
 
         var carrera = carreraById(request.carreraId());
 

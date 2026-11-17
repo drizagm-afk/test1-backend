@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@Validated
 @RequiredArgsConstructor
 public class EstudianteServiceImpl implements EstudianteService {
     private final EstudianteRepository repository;
@@ -31,7 +30,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     @Transactional(readOnly = true)
-    public PageResponseDTO<EstudianteResponseDTO> findPage(@Valid PageRequestDTO pageRequest) {
+    public PageResponseDTO<EstudianteResponseDTO> findPage(PageRequestDTO pageRequest) {
         var pageable = pageRequest.toPageable(fields);
 
         return PageResponseDTO.fromPage(repository.findAll(pageable).map(EstudianteMapper::toResponse));
@@ -63,7 +62,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         var email = request.email();
         if (repository.existsByEmailIgnoreCase(email))
-            throw new ReglaDeNegocioException("Email ya existe: " + codigo);
+            throw new ReglaDeNegocioException("Email ya existe: " + email);
 
         var estudiante = EstudianteMapper.fromRequest(request, carrera);
         estudiante = repository.save(estudiante);
@@ -75,7 +74,7 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Transactional
     public EstudianteResponseDTO update(Long id, EstudianteRequestDTO request) {
         var estudiante = repository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Estudiante no encontrada: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Estudiante no encontrado: " + id));
 
         var carrera = carreraById(request.carreraId());
 
@@ -85,7 +84,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         var email = request.email();
         if (repository.existsByEmailIgnoreCaseAndIdNot(email, id))
-            throw new ReglaDeNegocioException("Email ya existe: " + codigo);
+            throw new ReglaDeNegocioException("Email ya existe: " + email);
 
         EstudianteMapper.fromRequest(request, carrera, estudiante);
         estudiante = repository.saveAndFlush(estudiante);

@@ -55,6 +55,10 @@ public class CarreraServiceImpl implements CarreraService {
         if (repository.existsByNombreIgnoreCaseAndIdNot(nombre, id))
             throw new ReglaDeNegocioException("Nombre de Carrera ya existe: " + nombre);
 
+        if (!request.estado().equals(carrera.getEstado())
+        && repository.hasActiveCursosOrEstudiantes(id))
+            throw new ReglaDeNegocioException("No se puede desactivar una Carrera con Cursos o Estudiantes activos: " + id);
+
         CarreraMapper.fromRequest(request, carrera);
         carrera = repository.saveAndFlush(carrera);
 

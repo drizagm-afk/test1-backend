@@ -12,8 +12,8 @@ public record PageResponseDTO<T>(
         int totalPaginas,
         boolean esUltimaPagina
 ) {
-    public static <T> PageResponseDTO fromPage(Page<T> page) {
-        return new PageResponseDTO(
+    public static <T> PageResponseDTO<T> fromPage(Page<T> page) {
+        return new PageResponseDTO<>(
                 page.getContent(),
                 page.getNumber(),
                 page.getSize(),

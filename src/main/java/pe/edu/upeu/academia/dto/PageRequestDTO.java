@@ -1,8 +1,6 @@
 package pe.edu.upeu.academia.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,7 +14,9 @@ public record PageRequestDTO(
         @Min(value = 1, message = "El tamaño de pagina debe estar entre 1 y 100")
         @Max(value = 100, message = "El tamaño de pagina debe estar entre 1 y 100")
         int pageSize,
+        @NotBlank(message = "El campo a ordenar es obligatorio")
         String sortByField,
+        @NotBlank(message = "La direccion a ordenar es obligatoria")
         @Pattern(regexp = "asc|desc", message = "Solo se puede ordenar de forma ascendente y descendente")
         String sortOrder
 ) {
@@ -26,6 +26,6 @@ public record PageRequestDTO(
         if (!fields.contains(sortByField))
             throw new ReglaDeNegocioException("Solo se puede ordenar por: " + sortByField);
 
-        return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.fromString(sortByField), sortOrder));
+        return PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.fromString(sortOrder), sortByField));
     }
 }
